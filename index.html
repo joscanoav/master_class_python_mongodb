@@ -1,0 +1,542 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Masterclass ASIR | Python & MongoDB</title>
+    
+    <!-- Fuentes: Inter (UI) y Fira Code (Código) -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;600&family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    
+    <!-- Iconos (FontAwesome) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <style>
+        /* -----------------------------------------------------------
+           1. VARIABLES & RESET
+           ----------------------------------------------------------- */
+        :root {
+            --bg-main: #0f172a;
+            --bg-card: #1e293b;
+            --bg-glass: rgba(15, 23, 42, 0.85);
+            --text-primary: #f8fafc;
+            --text-secondary: #94a3b8;
+            --accent-mongo: #00ED64;
+            --accent-python: #3776AB;
+            --danger: #ef4444;
+            --radius: 12px;
+            --font-ui: 'Inter', system-ui, sans-serif;
+            --font-code: 'Fira Code', monospace;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            font-family: var(--font-ui);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        a { text-decoration: none; color: inherit; transition: 0.3s; }
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 20px; }
+        .section-padding { padding: 80px 0; }
+        .gradient-text {
+            background: linear-gradient(90deg, var(--accent-python), var(--accent-mongo));
+            -webkit-background-clip: text;
+            background-clip: text;
+            color: transparent;
+            font-weight: 800;
+        }
+
+        /* -----------------------------------------------------------
+           2. NAVBAR
+           ----------------------------------------------------------- */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: var(--bg-glass);
+            backdrop-filter: blur(12px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+            padding: 15px 0;
+        }
+        .nav-content { display: flex; justify-content: space-between; align-items: center; }
+        .logo { font-family: var(--font-code); font-weight: 700; font-size: 1.2rem; }
+        .logo span { color: var(--accent-mongo); }
+        .nav-links { display: flex; gap: 30px; }
+        .nav-links a { font-size: 0.9rem; color: var(--text-secondary); }
+        .nav-links a:hover { color: var(--accent-mongo); }
+
+        /* -----------------------------------------------------------
+           3. HERO SECTION
+           ----------------------------------------------------------- */
+        .hero {
+            min-height: 90vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background-image: radial-gradient(var(--bg-card) 1px, transparent 1px);
+            background-size: 40px 40px;
+        }
+        .hero h1 { font-size: clamp(2.5rem, 5vw, 4.5rem); margin-bottom: 1rem; }
+        .hero p { font-size: 1.25rem; color: var(--text-secondary); margin-bottom: 2.5rem; font-family: var(--font-code); }
+        .btn-cta {
+            display: inline-block;
+            background-color: var(--accent-mongo);
+            color: var(--bg-main);
+            padding: 16px 40px;
+            border-radius: 50px;
+            font-weight: 700;
+            box-shadow: 0 0 20px rgba(0, 237, 100, 0.4);
+            transition: 0.3s;
+        }
+        .btn-cta:hover { transform: translateY(-5px); background-color: #fff; }
+
+        /* -----------------------------------------------------------
+           4. ANIMACIÓN "EL VIAJE DEL DATO"
+           ----------------------------------------------------------- */
+        .architecture-section { background: var(--bg-card); text-align: center; border-y: 1px solid rgba(255,255,255,0.05); }
+        .data-flow-container { display: flex; justify-content: center; align-items: center; gap: 20px; max-width: 800px; margin: 60px auto; position: relative; }
+        .device { display: flex; flex-direction: column; align-items: center; z-index: 2; width: 120px; }
+        .device i { font-size: 3rem; margin-bottom: 10px; color: var(--text-secondary); }
+        .device span { font-family: var(--font-code); font-size: 0.9rem; }
+        .pipeline { flex-grow: 1; height: 6px; background: rgba(255,255,255,0.1); border-radius: 4px; position: relative; }
+        .data-packet {
+            position: absolute;
+            top: -12px;
+            width: 30px;
+            height: 30px;
+            background: var(--accent-mongo);
+            border-radius: 4px;
+            color: var(--bg-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-family: var(--font-code);
+            font-weight: bold;
+            box-shadow: 0 0 10px var(--accent-mongo);
+            animation: travel 3s infinite ease-in-out;
+        }
+        @keyframes travel {
+            0% { left: 0; opacity: 0; }
+            10% { opacity: 1; }
+            90% { opacity: 1; }
+            100% { left: 100%; opacity: 0; }
+        }
+
+        /* -----------------------------------------------------------
+           5. DESCARGAS (REDISEÑADO - ESTÉTICA DEV)
+           ----------------------------------------------------------- */
+        .download-container {
+            display: flex;
+            justify-content: center;
+        }
+        
+        .starter-kit-card {
+            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+            border: 1px solid #334155;
+            border-radius: 16px;
+            padding: 40px;
+            max-width: 600px;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 20px 40px -10px rgba(0,0,0,0.5);
+        }
+
+        /* Efecto de borde superior brillante */
+        .starter-kit-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--accent-python), var(--accent-mongo));
+        }
+
+        .kit-header { margin-bottom: 30px; text-align: center; }
+        .kit-title { font-size: 2rem; font-weight: 800; margin-bottom: 10px; color: #fff; }
+        .kit-subtitle { color: var(--text-secondary); font-size: 1rem; }
+
+        /* Árbol de archivos visual */
+        .file-tree {
+            background: #000;
+            padding: 20px;
+            border-radius: 8px;
+            font-family: var(--font-code);
+            font-size: 0.9rem;
+            color: #ccc;
+            margin-bottom: 30px;
+            border: 1px solid #333;
+        }
+        .ft-item { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; }
+        .ft-icon { color: var(--accent-mongo); width: 20px; text-align: center; }
+        .ft-comment { color: #666; margin-left: auto; font-style: italic; font-size: 0.8rem; }
+
+        .btn-download-mega {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            background: linear-gradient(135deg, var(--accent-mongo) 0%, #059669 100%);
+            color: #0f172a;
+            width: 100%;
+            padding: 18px;
+            border-radius: 12px;
+            font-weight: 800;
+            font-size: 1.2rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 20px rgba(0, 237, 100, 0.3);
+            border: 1px solid transparent;
+        }
+        
+        .btn-download-mega:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 30px rgba(0, 237, 100, 0.5);
+            color: #fff;
+            border-color: #fff;
+        }
+
+        /* -----------------------------------------------------------
+           6. TEORÍA VISUAL (PEDAGÓGICA)
+           ----------------------------------------------------------- */
+        .theory-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 40px; }
+        .card { 
+            background: var(--bg-card); 
+            padding: 0; /* Reset padding for header/body structure */
+            border-radius: var(--radius); 
+            transition: 0.3s; 
+            height: 100%; 
+            display: flex; 
+            flex-direction: column;
+            overflow: hidden;
+            border: 1px solid #334155;
+        }
+        
+        .card-header {
+            padding: 20px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.1rem;
+        }
+        .header-sql { background: rgba(239, 68, 68, 0.1); color: var(--danger); border-bottom: 1px solid rgba(239, 68, 68, 0.2); }
+        .header-nosql { background: rgba(0, 237, 100, 0.1); color: var(--accent-mongo); border-bottom: 1px solid rgba(0, 237, 100, 0.2); }
+
+        .card-body { padding: 20px; flex-grow: 1; font-family: var(--font-code); font-size: 0.85rem; }
+        
+        /* Simulación Visual SQL */
+        .db-schema { color: #888; margin-bottom: 10px; font-size: 0.75rem; }
+        .sql-row { display: flex; padding: 8px; border-bottom: 1px solid #333; }
+        .sql-row:last-child { border-bottom: none; }
+        .sql-cell { flex: 1; padding: 0 5px; border-right: 1px solid #333; }
+        .sql-cell:last-child { border-right: none; }
+        .sql-error-row { background: rgba(239, 68, 68, 0.2); border: 1px dashed var(--danger); margin-top: 10px; padding: 10px; color: #fca5a5; }
+        
+        /* Simulación Visual NoSQL */
+        .json-block { color: #e2e8f0; }
+        .json-key { color: #7dd3fc; } /* Light Blue */
+        .json-val { color: #ce9178; } /* Orange Strings */
+        .json-bool { color: #569cd6; } /* Blue Bool */
+        .json-diff { background: rgba(0, 237, 100, 0.1); border-left: 2px solid var(--accent-mongo); padding-left: 8px; display: block; margin: 2px 0; }
+
+        .pedagogy-note {
+            padding: 15px;
+            font-size: 0.9rem;
+            background: #0f172a;
+            border-top: 1px solid #334155;
+            color: var(--text-secondary);
+        }
+        .pedagogy-note strong { color: #fff; }
+
+        /* -----------------------------------------------------------
+           7. TERMINAL & CÓDIGO
+           ----------------------------------------------------------- */
+        .terminal-window {
+            background: #000;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #334155;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.3);
+            margin-bottom: 40px;
+        }
+        .terminal-header { background: #1e293b; padding: 10px 15px; display: flex; align-items: center; gap: 8px; }
+        .dot { width: 12px; height: 12px; border-radius: 50%; }
+        .dot-red { background: #ff5f56; }
+        .dot-yellow { background: #ffbd2e; }
+        .dot-green { background: #27c93f; }
+        .terminal-title { margin-left: 10px; font-size: 0.75rem; color: var(--text-secondary); font-family: var(--font-code); flex-grow: 1; text-align: center; }
+        .terminal-body { padding: 20px; display: flex; align-items: center; justify-content: space-between; gap: 15px; }
+        .cmd-text { font-family: var(--font-code); color: var(--accent-mongo); font-size: 1rem; }
+        .cmd-text::before { content: "➜ "; color: #3b82f6; font-weight: bold; }
+        .btn-copy { background: #334155; border: 1px solid #475569; color: #fff; padding: 8px 16px; border-radius: 6px; cursor: pointer; transition: 0.2s; font-family: var(--font-ui); font-size: 0.85rem; font-weight: 600; display: flex; align-items: center; gap: 8px; }
+        .btn-copy:hover { border-color: var(--accent-mongo); color: var(--accent-mongo); }
+
+        details { background: #111; border-radius: var(--radius); overflow: hidden; border: 1px solid #333; }
+        summary { padding: 15px 20px; cursor: pointer; font-family: var(--font-code); font-weight: 600; background: #1e1e1e; color: var(--accent-python); display: flex; align-items: center; }
+        summary::after { content: '+'; margin-left: auto; }
+        details[open] summary::after { content: '-'; }
+        pre { padding: 20px; overflow-x: auto; font-family: var(--font-code); font-size: 0.85rem; color: #d4d4d4; line-height: 1.5; }
+
+        /* Resaltado de Sintaxis */
+        .c-kwd { color: #569cd6; } .c-str { color: #ce9178; } .c-com { color: #6a9955; font-style: italic; } .c-func { color: #dcdcaa; } .c-num { color: #b5cea8; } 
+
+        footer { text-align: center; padding: 40px 0; border-top: 1px solid rgba(255,255,255,0.05); color: var(--text-secondary); }
+
+        @media (max-width: 768px) {
+            .theory-grid { grid-template-columns: 1fr; }
+            .hero h1 { font-size: 2.5rem; }
+            .terminal-body { flex-direction: column; align-items: flex-start; }
+            .btn-copy { align-self: flex-end; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav class="navbar">
+        <div class="container nav-content">
+            <div class="logo">ASIR <span>/ MASTERCLASS</span></div>
+            <div class="nav-links">
+                <a href="#inicio">Inicio</a>
+                <a href="#arquitectura">Arquitectura</a>
+                <a href="#teoria">Teoría</a>
+                <a href="#recursos">Recursos</a>
+            </div>
+        </div>
+    </nav>
+
+    <section id="inicio" class="hero">
+        <div class="container">
+            <h1>Más allá de <span style="color:var(--danger)">SQL</span><br>
+            <span class="gradient-text">Integración Python & Mongo</span></h1>
+            <p>Conecta tus scripts a la nube. Moderniza tu backend.</p>
+            <a href="#arquitectura" class="btn-cta">Empezar la Clase 👇</a>
+        </div>
+    </section>
+
+    <!-- 4. ARQUITECTURA -->
+    <section id="arquitectura" class="section-padding architecture-section">
+        <div class="container">
+            <h2>📡 Arquitectura de la Sesión</h2>
+            <div class="data-flow-container">
+                <div class="device"><i class="fa-solid fa-laptop-code" style="color: var(--accent-python)"></i><span>Python Script</span></div>
+                <div class="pipeline"><div class="data-packet">{}</div></div>
+                <div class="device"><i class="fa-solid fa-cloud" style="color: var(--accent-mongo)"></i><span>MongoDB Atlas</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 5. DESCARGAS (NUEVA VERSIÓN "DEV-FRIENDLY") -->
+    <section class="section-padding">
+        <div class="container download-container">
+            <div class="starter-kit-card">
+                <div class="kit-header">
+                    <h2 class="kit-title">📦 Starter Kit ASIR</h2>
+                    <p class="kit-subtitle">Todo lo necesario para empezar a programar en 30 segundos.</p>
+                </div>
+                
+                <!-- Árbol de archivos visual -->
+                <div class="file-tree">
+                    <div class="ft-item">
+                        <span class="ft-icon"><i class="fa-regular fa-folder-open"></i></span>
+                        <span>masterclass_kit/</span>
+                    </div>
+                    <div class="ft-item">
+                        <span class="ft-icon" style="margin-left: 15px;">🐍</span>
+                        <span>main.py</span>
+                        <span class="ft-comment">// Plantilla vacía</span>
+                    </div>
+                    <div class="ft-item">
+                        <span class="ft-icon" style="margin-left: 15px;">⚙️</span>
+                        <span>.env</span>
+                        <span class="ft-comment">// Claves de conexión</span>
+                    </div>
+                    <div class="ft-item">
+                        <span class="ft-icon" style="margin-left: 15px;">📄</span>
+                        <span>requirements.txt</span>
+                    </div>
+                </div>
+
+                <a href="#" class="btn-download-mega">
+                    <i class="fa-solid fa-download"></i> Descargar .ZIP
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- 6. TEORÍA (MEJORADA PEDAGÓGICAMENTE) -->
+    <section id="teoria" class="section-padding" style="background: rgba(255,255,255,0.02)">
+        <div class="container">
+            <h2 style="text-align: center; margin-bottom: 40px;">¿Por qué NoSQL? La Diferencia Real</h2>
+            <div class="theory-grid">
+                
+                <!-- SQL Card -->
+                <div class="card card-sql">
+                    <div class="card-header header-sql">
+                        <i class="fa-solid fa-database"></i> SQL (Base Relacional)
+                    </div>
+                    <div class="card-body">
+                        <div class="db-schema">SCHEMA: id (INT) | name (VARCHAR) | age (INT)</div>
+                        <!-- Tabla visual -->
+                        <div style="border: 1px solid #444; border-radius: 4px;">
+                            <div class="sql-row" style="background: #222; font-weight: bold;">
+                                <div class="sql-cell">id</div><div class="sql-cell">name</div><div class="sql-cell">age</div>
+                            </div>
+                            <div class="sql-row"><div class="sql-cell">1</div><div class="sql-cell">Ana</div><div class="sql-cell">25</div></div>
+                            <div class="sql-row"><div class="sql-cell">2</div><div class="sql-cell">Luis</div><div class="sql-cell">30</div></div>
+                        </div>
+                        
+                        <!-- EL ERROR VISUAL -->
+                        <div class="sql-error-row">
+                            <i class="fa-solid fa-triangle-exclamation"></i> <strong>INSERT FAILED:</strong><br>
+                            Intentando agregar columna 'hobbies'.<br>
+                            > Columna 'hobbies' no existe en el esquema.
+                        </div>
+                    </div>
+                    <div class="pedagogy-note">
+                        <strong>❌ El problema:</strong> Si quieres guardar un dato nuevo que no estaba planeado (como 'hobbies'), la base de datos <strong>te bloquea</strong> hasta que rediseñes la tabla entera.
+                    </div>
+                </div>
+
+                <!-- NoSQL Card -->
+                <div class="card card-nosql">
+                    <div class="card-header header-nosql">
+                        <i class="fa-solid fa-leaf"></i> NoSQL (Documental)
+                    </div>
+                    <div class="card-body">
+                        <div class="json-block">
+                            {<br>
+                            &nbsp;&nbsp;<span class="json-key">"name"</span>: <span class="json-val">"Ana"</span>,<br>
+                            &nbsp;&nbsp;<span class="json-key">"age"</span>: <span class="json-bool">25</span><br>
+                            }<br>
+                            <br>
+                            {<br>
+                            &nbsp;&nbsp;<span class="json-key">"name"</span>: <span class="json-val">"Carlos"</span>,<br>
+                            &nbsp;&nbsp;<span class="json-key">"age"</span>: <span class="json-bool">28</span>,<br>
+                            &nbsp;&nbsp;<span class="json-diff"><span class="json-key">"hobbies"</span>: [<span class="json-val">"Python"</span>, <span class="json-val">"Gaming"</span>]</span>
+                            }
+                        </div>
+                    </div>
+                    <div class="pedagogy-note">
+                        <strong>✅ La solución:</strong> Los documentos son independientes. Carlos tiene 'hobbies' y Ana no. <strong>MongoDB se adapta</strong> a tu código, no al revés.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 7. RECURSOS -->
+    <section id="recursos" class="section-padding">
+        <div class="container">
+            <h2 style="margin-bottom: 40px;">📂 Soluciones y Comandos</h2>
+
+            <!-- TERMINAL -->
+            <div class="terminal-window">
+                <div class="terminal-header">
+                    <div class="dot dot-red"></div>
+                    <div class="dot dot-yellow"></div>
+                    <div class="dot dot-green"></div>
+                    <div class="terminal-title">zsh — masterclass</div>
+                </div>
+                <div class="terminal-body">
+                    <span class="cmd-text" id="installCmd">pip install pymongo python-dotenv</span>
+                    <button class="btn-copy" id="copyBtn" onclick="copyToClipboard()">
+                        <i class="fa-regular fa-copy"></i> <span>Copiar</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- ACORDEÓN CÓDIGO -->
+            <details>
+                <summary>🐍 Ver Script Final (main.py)</summary>
+                <pre><code><span class="c-kwd">import</span> os
+<span class="c-kwd">import</span> pymongo
+<span class="c-kwd">from</span> dotenv <span class="c-kwd">import</span> load_dotenv
+
+<span class="c-com"># --- FASE 1: ADMINISTRACIÓN Y CONEXIÓN ---</span>
+<span class="c-func">load_dotenv</span>()
+uri = os.<span class="c-func">getenv</span>(<span class="c-str">"MONGO_URI"</span>)
+
+<span class="c-kwd">try</span>:
+    cliente = pymongo.<span class="c-func">MongoClient</span>(uri)
+    <span class="c-func">print</span>(<span class="c-str">"✅ CONEXIÓN EXITOSA"</span>)
+<span class="c-kwd">except</span> <span class="c-cls">Exception</span> <span class="c-kwd">as</span> e:
+    <span class="c-func">print</span>(f<span class="c-str">"❌ Error: {e}"</span>)
+
+db = cliente[<span class="c-str">"instituto_asir"</span>]
+coleccion = db[<span class="c-str">"clase_conjunta"</span>]
+
+<span class="c-com"># --- FASE 2: LÓGICA ---</span>
+<span class="c-kwd">while</span> <span class="c-kwd">True</span>:
+    <span class="c-func">print</span>(<span class="c-str">"1. Insertar Alumno (Write)"</span>)
+    <span class="c-func">print</span>(<span class="c-str">"2. Ver Alumnos (Read)"</span>)
+    <span class="c-func">print</span>(<span class="c-str">"3. Salir"</span>)
+
+    opcion = <span class="c-func">input</span>(<span class="c-str">"\n> Elige una opción: "</span>)
+
+    <span class="c-kwd">if</span> opcion == <span class="c-str">"1"</span>:
+        nombre = <span class="c-func">input</span>(<span class="c-str">"Nombre: "</span>)
+        curso = <span class="c-func">input</span>(<span class="c-str">"Curso (1º o 2º): "</span>)
+        nuevo_alumno = {
+            <span class="c-str">"nombre"</span>: nombre,
+            <span class="c-str">"curso"</span>: curso,
+            <span class="c-str">"asistente"</span>: <span class="c-kwd">True</span>
+        }
+        coleccion.<span class="c-func">insert_one</span>(nuevo_alumno)
+        <span class="c-func">print</span>(<span class="c-str">"💾 ¡Guardado!"</span>)
+
+    <span class="c-kwd">elif</span> opcion == <span class="c-str">"2"</span>:
+        cursor = coleccion.<span class="c-func">find</span>()
+        <span class="c-kwd">for</span> alumno <span class="c-kwd">in</span> cursor:
+            <span class="c-func">print</span>(f<span class="c-str">"- {alumno['nombre']} ({alumno['curso']})"</span>)
+
+    <span class="c-kwd">elif</span> opcion == <span class="c-str">"3"</span>:
+        <span class="c-kwd">break</span></code></pre>
+            </details>
+        </div>
+    </section>
+
+    <footer>
+        <div class="container">
+            <p>Diseñado para ASIR Masterclass - IFP | <i class="fa-solid fa-code"></i> <span id="year"></span></p>
+        </div>
+    </footer>
+
+    <script>
+        // Actualizar año automáticamente
+        document.getElementById('year').textContent = new Date().getFullYear();
+
+        function copyToClipboard() {
+            const commandText = document.getElementById('installCmd').innerText;
+            const btn = document.getElementById('copyBtn');
+            const btnSpan = btn.querySelector('span');
+            const btnIcon = btn.querySelector('i');
+
+            const textArea = document.createElement("textarea");
+            textArea.value = commandText;
+            document.body.appendChild(textArea);
+            textArea.select();
+            
+            try {
+                document.execCommand('copy');
+                btnSpan.innerText = 'Copiado!';
+                btn.style.borderColor = 'var(--accent-mongo)';
+                btnIcon.className = 'fa-solid fa-check';
+                setTimeout(() => {
+                    btnSpan.innerText = 'Copiar';
+                    btn.style.borderColor = '#475569';
+                    btnIcon.className = 'fa-regular fa-copy';
+                }, 2000);
+            } catch (err) {}
+            document.body.removeChild(textArea);
+        }
+    </script>
+</body>
+</html>
