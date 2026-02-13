@@ -130,6 +130,27 @@
         }
 
         /* -----------------------------------------------------------
+           4.5 VIDEO SECTION (AÑADIDO NUEVAMENTE)
+           ----------------------------------------------------------- */
+        .video-wrapper {
+            position: relative;
+            padding-bottom: 56.25%; /* 16:9 Aspect Ratio */
+            height: 0;
+            max-width: 800px;
+            margin: 0 auto;
+            border-radius: var(--radius);
+            overflow: hidden;
+            border: 1px solid var(--accent-mongo);
+            box-shadow: 0 0 20px rgba(0, 237, 100, 0.1);
+            background: #000;
+        }
+        .video-wrapper iframe {
+            position: absolute;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+        }
+
+        /* -----------------------------------------------------------
            5. DESCARGAS (REDISEÑADO - ESTÉTICA DEV)
            ----------------------------------------------------------- */
         .download-container {
@@ -209,7 +230,7 @@
         .theory-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 40px; }
         .card { 
             background: var(--bg-card); 
-            padding: 0; /* Reset padding for header/body structure */
+            padding: 0; 
             border-radius: var(--radius); 
             transition: 0.3s; 
             height: 100%; 
@@ -242,9 +263,9 @@
         
         /* Simulación Visual NoSQL */
         .json-block { color: #e2e8f0; }
-        .json-key { color: #7dd3fc; } /* Light Blue */
-        .json-val { color: #ce9178; } /* Orange Strings */
-        .json-bool { color: #569cd6; } /* Blue Bool */
+        .json-key { color: #7dd3fc; } 
+        .json-val { color: #ce9178; } 
+        .json-bool { color: #569cd6; } 
         .json-diff { background: rgba(0, 237, 100, 0.1); border-left: 2px solid var(--accent-mongo); padding-left: 8px; display: block; margin: 2px 0; }
 
         .pedagogy-note {
@@ -329,6 +350,28 @@
                 <div class="device"><i class="fa-solid fa-laptop-code" style="color: var(--accent-python)"></i><span>Python Script</span></div>
                 <div class="pipeline"><div class="data-packet">{}</div></div>
                 <div class="device"><i class="fa-solid fa-cloud" style="color: var(--accent-mongo)"></i><span>MongoDB Atlas</span></div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 4.5. NUEVA SECCIÓN VIDEO (RESTAURADO) -->
+    <section class="section-padding" style="background: rgba(0,0,0,0.2);">
+        <div class="container" style="text-align: center;">
+            <h2 style="margin-bottom: 10px;">🛠️ Paso 0: Configura tu Cluster</h2>
+            <p style="color: var(--text-secondary); margin-bottom: 30px;">
+                Antes de descargar el kit, sigue mi tutorial para crear tu cuenta gratuita en MongoDB Atlas.
+            </p>
+            
+            <div class="video-wrapper">
+                <!-- REEMPLAZAR LA ID DE YOUTUBE AQUÍ -->
+                <iframe 
+  src="https://www.youtube.com/embed/4CXTVVK5Edk"
+  title="YouTube video player"
+  frameborder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowfullscreen>
+</iframe>
+
             </div>
         </div>
     </section>
